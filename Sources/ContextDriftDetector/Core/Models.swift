@@ -1,6 +1,7 @@
 import Foundation
 
-struct TrackedApp: Equatable {
+struct TrackedApp: Equatable, Hashable, Identifiable {
+    var id: String { bundleID }
     let bundleID: String
     let localizedName: String
 }

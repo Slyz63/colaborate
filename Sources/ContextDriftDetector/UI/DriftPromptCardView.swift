@@ -49,7 +49,7 @@ struct DriftPromptCardView: View {
             .font(.callout)
         }
         .padding(20)
-        .background(.background.secondary)
+        .background(Color(nsColor: .controlBackgroundColor).opacity(0.92))
         .clipShape(containerShape)
         .overlay {
             containerShape

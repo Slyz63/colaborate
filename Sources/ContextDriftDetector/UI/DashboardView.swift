@@ -2,6 +2,8 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var coordinator: DriftCoordinator
+    @State private var anchorInput = ""
+    @State private var shouldFocusAnchorField = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -9,33 +11,77 @@ struct DashboardView: View {
 
             GroupBox {
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        TextField("例: プロジェクトの要件定義をまとめる", text: $coordinator.anchorText)
-                            .textFieldStyle(.plain)
-                            .padding(10)
-                            .background(.background.secondary, in: RoundedRectangle(cornerRadius: 10))
+                    HStack(spacing: 8) {
+                        Text("戻る先アプリ")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Picker("戻る先アプリ", selection: $coordinator.selectedAnchorBundleID) {
+                            ForEach(coordinator.availableAnchorApps) { app in
+                                Text(app.localizedName).tag(app.bundleID)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(maxWidth: 260, alignment: .leading)
 
-                        Button("フォーカス開始", action: coordinator.startAnchor)
+                        Button("更新") {
+                            coordinator.refreshAvailableAnchorApps()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+
+                    HStack {
+                        AnchorInputField(
+                            text: $anchorInput,
+                            placeholder: "例: プロジェクトの要件定義をまとめる",
+                            shouldFocus: shouldFocusAnchorField
+                        )
+                        .frame(height: 28)
+
+                        Button("フォーカス開始") {
+                            coordinator.startAnchor(
+                                anchorInput,
+                                preferredBundleID: coordinator.selectedAnchorBundleID
+                            )
+                        }
                             .buttonStyle(.borderedProminent)
                             .tint(.accentColor)
-                            .keyboardShortcut(.return, modifiers: [])
-                            .disabled(coordinator.anchorText.isEmpty)
+                            .disabled(
+                                anchorInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                || coordinator.selectedAnchorBundleID.isEmpty
+                            )
                             .controlSize(.large)
                     }
-                    Text("ひとつの作業に集中するためのアンカーを設定します。")
+                    Text("戻る先アプリとタスク名を指定してアンカーを開始します。")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .padding(.leading, 4)
+                    if !coordinator.anchorText.isEmpty {
+                        Text("現在のアンカー: \(coordinator.anchorText)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .padding(.leading, 4)
+                    }
                 }
             } label: {
                 Label("フォーカスアンカー", systemImage: "anchor")
                     .fontWeight(.bold)
             }
 
+            HStack {
+                Button("ドリフトカードをテスト表示") {
+                    coordinator.triggerDriftPromptForTesting()
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+
+                Spacer()
+            }
 
             HStack(spacing: 24) {
                 GroupBox("現在の状態") {
                     VStack(alignment: .leading, spacing: 10) {
+                        LabeledContent("アンカーアプリ", value: coordinator.anchorAppName)
                         LabeledContent("アクティブなアプリ", value: coordinator.currentAppName)
                         LabeledContent("バンドルID", value: coordinator.currentAppBundleID)
                         if let until = coordinator.intentionalBreakUntil {
@@ -57,6 +103,10 @@ struct DashboardView: View {
                     .frame(minHeight: 70)
                 }
             }
+
+            Text(coordinator.statusMessage)
+                .font(.callout)
+                .foregroundStyle(.secondary)
             
             Spacer()
         }
@@ -74,6 +124,12 @@ struct DashboardView: View {
             }
         }
         .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.5), value: coordinator.isDriftPromptPresented)
+        .onAppear {
+            shouldFocusAnchorField = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                shouldFocusAnchorField = false
+            }
+        }
     }
 
     @ViewBuilder
