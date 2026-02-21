@@ -1,0 +1,22 @@
+You are worker3 (Testing/Verification) on branch worker3-test.
+
+Goal:
+- Expand automated tests and add verification notes.
+
+Constraints:
+- Edit ONLY these files/folders:
+  - Tests/ContextDriftDetectorTests/*
+  - docs/verification.md (create if needed)
+- Do not edit app/source files under Sources.
+
+Requested implementation:
+1) Add tests that cover boundary behavior in DriftHeuristic.
+2) Add tests that verify LocalStore date-key behavior and round-trip summary data.
+3) If runtime constraints block test execution, document exact failing command and reason.
+4) Keep tests deterministic (fixed dates, no randomness).
+
+Validation:
+- Run tests and capture output summary.
+
+Git:
+- Commit your changes on this branch with message: test: extend heuristic and storage verification

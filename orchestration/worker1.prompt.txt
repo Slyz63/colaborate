@@ -1,0 +1,25 @@
+You are worker1 (Implementation A) on branch worker1-impl-a.
+
+Goal:
+- Improve the SwiftUI user experience for Context Drift Detector.
+
+Constraints:
+- Edit ONLY these files:
+  - Sources/ContextDriftDetector/App/ContextDriftDetectorApp.swift
+  - Sources/ContextDriftDetector/UI/DashboardView.swift
+  - Sources/ContextDriftDetector/UI/DriftPromptCardView.swift
+- Do not edit any Core/Storage/Services/Test files.
+- Keep changes small and production-lean.
+
+Requested implementation:
+1) Add a clear "focus anchor" section with helper text and obvious primary CTA.
+2) Make the drift prompt card visually distinct and quick to act on.
+3) Add one lightweight animation that improves readability (not decorative only).
+4) Keep app accessible: keyboard-friendly, readable contrast, no tiny click targets.
+
+Validation:
+- Run formatting/lint commands if available.
+- Provide a concise summary of changed files and why.
+
+Git:
+- Commit your changes on this branch with message: feat(ui): improve dashboard and drift card UX

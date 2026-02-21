@@ -1,0 +1,28 @@
+You are worker2 (Implementation B) on branch worker2-impl-b.
+
+Goal:
+- Improve drift detection and recovery behavior robustness.
+
+Constraints:
+- Edit ONLY these files:
+  - Sources/ContextDriftDetector/App/DriftCoordinator.swift
+  - Sources/ContextDriftDetector/Core/AppSwitchMonitor.swift
+  - Sources/ContextDriftDetector/Core/DriftHeuristic.swift
+  - Sources/ContextDriftDetector/Core/Models.swift
+  - Sources/ContextDriftDetector/Storage/LocalStore.swift
+  - Sources/ContextDriftDetector/Services/AppRestorer.swift
+- Do not edit UI files or tests.
+
+Requested implementation:
+1) Avoid false positives from duplicate app-activation events.
+2) Ensure drift detection only starts after anchor is explicitly started.
+3) Keep intentional-break behavior predictable.
+4) Improve app restore behavior from bundle ID reliably.
+5) Keep summary persistence stable and deterministic.
+
+Validation:
+- Run tests/lint if available.
+- Provide a concise summary and note any environment blockers.
+
+Git:
+- Commit your changes on this branch with message: feat(core): harden drift detection and recovery flow
